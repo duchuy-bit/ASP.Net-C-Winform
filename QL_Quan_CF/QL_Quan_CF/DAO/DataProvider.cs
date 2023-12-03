@@ -14,19 +14,20 @@ namespace QL_Quan_CF.DAO
 
         public DataTable ExcuteQuery(string query)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
-
-            connection.Open();
-
-            MySqlCommand command = new MySqlCommand(query, connection);
-
             DataTable dataTable = new DataTable();
 
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            using (MySqlConnection connection = new MySqlConnection(connectString))
+            {   
+                connection.Open();
 
-            adapter.Fill(dataTable);
+                MySqlCommand command = new MySqlCommand(query, connection);
 
-            connection.Close();
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+
+                adapter.Fill(dataTable);
+
+                connection.Close();
+            }
 
             return dataTable;
         }
