@@ -44,8 +44,8 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.btnUpdateProfile = new System.Windows.Forms.Button();
             this.btnCancelProfile = new System.Windows.Forms.Button();
+            this.btnUpdateProfile = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -198,16 +198,6 @@
             this.panel6.Size = new System.Drawing.Size(442, 39);
             this.panel6.TabIndex = 5;
             // 
-            // btnUpdateProfile
-            // 
-            this.btnUpdateProfile.Location = new System.Drawing.Point(263, 3);
-            this.btnUpdateProfile.Name = "btnUpdateProfile";
-            this.btnUpdateProfile.Size = new System.Drawing.Size(85, 28);
-            this.btnUpdateProfile.TabIndex = 2;
-            this.btnUpdateProfile.Text = "Cập nhật";
-            this.btnUpdateProfile.UseVisualStyleBackColor = true;
-            this.btnUpdateProfile.Click += new System.EventHandler(this.button1_Click);
-            // 
             // btnCancelProfile
             // 
             this.btnCancelProfile.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -218,6 +208,16 @@
             this.btnCancelProfile.Text = "Thoát";
             this.btnCancelProfile.UseVisualStyleBackColor = true;
             this.btnCancelProfile.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // btnUpdateProfile
+            // 
+            this.btnUpdateProfile.Location = new System.Drawing.Point(263, 3);
+            this.btnUpdateProfile.Name = "btnUpdateProfile";
+            this.btnUpdateProfile.Size = new System.Drawing.Size(85, 28);
+            this.btnUpdateProfile.TabIndex = 2;
+            this.btnUpdateProfile.Text = "Cập nhật";
+            this.btnUpdateProfile.UseVisualStyleBackColor = true;
+            this.btnUpdateProfile.Click += new System.EventHandler(this.button1_Click);
             // 
             // fAccountProfile
             // 
@@ -232,6 +232,7 @@
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "fAccountProfile";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Thông tin cá nhân";

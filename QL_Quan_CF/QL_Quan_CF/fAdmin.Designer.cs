@@ -985,8 +985,8 @@
             this.ClientSize = new System.Drawing.Size(778, 505);
             this.Controls.Add(this.tcAdmin);
             this.Name = "fAdmin";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "fAdmin";
-            this.Load += new System.EventHandler(this.fAdmin_Load);
             this.tcAdmin.ResumeLayout(false);
             this.tcBill.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

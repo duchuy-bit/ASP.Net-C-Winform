@@ -1,0 +1,11 @@
+DROP PROCEDURE IF EXISTS login;
+CREATE PROCEDURE login(
+	IN username varchar(100),
+    IN pwd varchar(100)
+)
+BEGIN
+   SELECT * FROM account 
+   WHERE account.UserName =username 
+   AND account.Password = pwd;
+END;
+
