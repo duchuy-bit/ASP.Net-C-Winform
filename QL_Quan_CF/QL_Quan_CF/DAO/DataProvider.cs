@@ -29,11 +29,16 @@ namespace QL_Quan_CF.DAO
             DataTable dataTable = new DataTable();
 
             using (MySqlConnection connection = new MySqlConnection(connectString))
+<<<<<<< HEAD
             {
+=======
+            {   
+>>>>>>> 1cf42d737471366834ec5de728aabb02d2667412
                 connection.Open();
 
                 MySqlCommand command = new MySqlCommand(query, connection);
 
+<<<<<<< HEAD
                 if (parameter != null)
                 {
                     string[] listPara = query.Split(' ');
@@ -48,6 +53,8 @@ namespace QL_Quan_CF.DAO
                     }
                 }
 
+=======
+>>>>>>> 1cf42d737471366834ec5de728aabb02d2667412
                 MySqlDataAdapter adapter = new MySqlDataAdapter(command);
 
                 adapter.Fill(dataTable);
