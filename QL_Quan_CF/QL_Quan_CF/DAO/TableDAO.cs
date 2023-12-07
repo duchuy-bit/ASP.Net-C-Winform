@@ -57,5 +57,7 @@ namespace QL_Quan_CF.DAO
             }
             return tableList;
         }
+
+
     }
 }

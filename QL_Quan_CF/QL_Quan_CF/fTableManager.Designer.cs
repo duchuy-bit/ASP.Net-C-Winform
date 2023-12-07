@@ -51,18 +51,20 @@ namespace QL_Quan_CF
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel2 = new System.Windows.Forms.Panel();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.tbSum = new System.Windows.Forms.TextBox();
+            this.nudSale = new System.Windows.Forms.NumericUpDown();
             this.bthSale = new System.Windows.Forms.Button();
             this.cbSwitchTable = new System.Windows.Forms.ComboBox();
             this.btnPay = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.flpTable = new System.Windows.Forms.FlowLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberAmount)).BeginInit();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSale)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -193,6 +195,8 @@ namespace QL_Quan_CF
             this.lvBill.TabIndex = 0;
             this.lvBill.UseCompatibleStateImageBehavior = false;
             this.lvBill.View = System.Windows.Forms.View.Details;
+            this.lvBill.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvBill_ItemSelectionChanged);
+            this.lvBill.SelectedIndexChanged += new System.EventHandler(this.cbNameFood_SelectedIndexChanged);
             // 
             // columnHeader1
             // 
@@ -216,7 +220,9 @@ namespace QL_Quan_CF
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.numericUpDown2);
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.tbSum);
+            this.panel2.Controls.Add(this.nudSale);
             this.panel2.Controls.Add(this.bthSale);
             this.panel2.Controls.Add(this.cbSwitchTable);
             this.panel2.Controls.Add(this.btnPay);
@@ -226,13 +232,23 @@ namespace QL_Quan_CF
             this.panel2.Size = new System.Drawing.Size(361, 72);
             this.panel2.TabIndex = 2;
             // 
-            // numericUpDown2
+            // tbSum
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(109, 43);
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(68, 20);
-            this.numericUpDown2.TabIndex = 4;
-            this.numericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbSum.Enabled = false;
+            this.tbSum.Location = new System.Drawing.Point(183, 24);
+            this.tbSum.Name = "tbSum";
+            this.tbSum.Size = new System.Drawing.Size(82, 20);
+            this.tbSum.TabIndex = 5;
+            this.tbSum.Text = "0";
+            this.tbSum.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // nudSale
+            // 
+            this.nudSale.Location = new System.Drawing.Point(109, 43);
+            this.nudSale.Name = "nudSale";
+            this.nudSale.Size = new System.Drawing.Size(43, 20);
+            this.nudSale.TabIndex = 4;
+            this.nudSale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // bthSale
             // 
@@ -242,6 +258,7 @@ namespace QL_Quan_CF
             this.bthSale.TabIndex = 3;
             this.bthSale.Text = "Giảm giá";
             this.bthSale.UseVisualStyleBackColor = true;
+            this.bthSale.Click += new System.EventHandler(this.bthSale_Click);
             // 
             // cbSwitchTable
             // 
@@ -254,12 +271,13 @@ namespace QL_Quan_CF
             // 
             // btnPay
             // 
-            this.btnPay.Location = new System.Drawing.Point(249, 3);
+            this.btnPay.Location = new System.Drawing.Point(268, 3);
             this.btnPay.Name = "btnPay";
-            this.btnPay.Size = new System.Drawing.Size(109, 60);
+            this.btnPay.Size = new System.Drawing.Size(90, 60);
             this.btnPay.TabIndex = 1;
             this.btnPay.Text = "Thanh toán";
             this.btnPay.UseVisualStyleBackColor = true;
+            this.btnPay.Click += new System.EventHandler(this.btnPay_Click);
             // 
             // button2
             // 
@@ -277,6 +295,16 @@ namespace QL_Quan_CF
             this.flpTable.Name = "flpTable";
             this.flpTable.Size = new System.Drawing.Size(428, 509);
             this.flpTable.TabIndex = 3;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(158, 43);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(19, 16);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "%";
             // 
             // fTableManager
             // 
@@ -297,7 +325,8 @@ namespace QL_Quan_CF
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numberAmount)).EndInit();
             this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSale)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -319,7 +348,7 @@ namespace QL_Quan_CF
         private System.Windows.Forms.ComboBox cbCategoryFood;
         private System.Windows.Forms.NumericUpDown numberAmount;
         private System.Windows.Forms.FlowLayoutPanel flpTable;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.NumericUpDown nudSale;
         private System.Windows.Forms.Button bthSale;
         private System.Windows.Forms.ComboBox cbSwitchTable;
         private System.Windows.Forms.Button btnPay;
@@ -329,5 +358,7 @@ namespace QL_Quan_CF
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.TextBox tbSum;
+        private System.Windows.Forms.Label label1;
     }
 }

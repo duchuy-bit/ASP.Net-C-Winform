@@ -16,13 +16,17 @@ using System.Windows.Forms;
 namespace QL_Quan_CF
 {
 
-    
+
     public partial class fTableManager : Form
     {
 
-        Food FoodSelected ;
+        Food FoodSelected;
 
-        int idTam;
+        private List<DisplayBill> billDefaults = new List<DisplayBill>();
+
+        int idTable;
+        int idBill = -1;
+        long sumBill = 0;
         public fTableManager()
         {
             InitializeComponent();
@@ -46,6 +50,7 @@ namespace QL_Quan_CF
 
         void loadTable()
         {
+            flpTable.Controls.Clear();
             List<Table> tableList = TableDAO.Instance.loadTableList();
             foreach (Table table in tableList)
             {
@@ -64,7 +69,7 @@ namespace QL_Quan_CF
         {
             int tableId = ((sender as Button).Tag as Table).ID;
             //objects = (sender as Button).Tag as Table;
-            idTam = tableId;
+            idTable = tableId;
 
             ShowBill(tableId);
 
@@ -77,7 +82,8 @@ namespace QL_Quan_CF
             cbSwitchTable.Items.Clear();
             List<Table> tables = TableDAO.Instance.LoadTableEmpty(idTableOld);
 
-            foreach (Table table in tables) { 
+            foreach (Table table in tables)
+            {
                 cbSwitchTable.Items.Add(table.Name.ToString());
             }
         }
@@ -86,11 +92,23 @@ namespace QL_Quan_CF
         {
             lvBill.Items.Clear();
 
+            long sum = 0;
+
             List<DisplayBill> bills = new List<DisplayBill>();
 
+
             bills = BillDAO.Instance.DisplayBillWithTable(id);
+            billDefaults = bills;
 
             int i = 0;
+            if (bills.Count != 0 && bills[0]?.ID != null) idBill = bills[0].ID;
+            else idBill = -1;
+
+            if (bills.Count <= 0) {
+                tbSum.Text = "0";
+                sumBill = 0;
+                return;
+            }
 
             foreach (DisplayBill bill in bills)
             {
@@ -102,7 +120,21 @@ namespace QL_Quan_CF
                 item.SubItems.Add(bill.Count.ToString());
                 item.SubItems.Add(((int)(bill.Price * bill.Count)).ToString());
                 lvBill.Items.Add(item);
+                sum += ((int)(bill.Price * bill.Count));
             }
+
+            sumBill = sum;
+            tbSum.Tag = sum;
+            tbSum.Text = string.Format(
+                System.Globalization.CultureInfo.GetCultureInfo("vi-VI"),
+                "{0:#,##0.00}",
+                double.Parse(sum.ToString()));
+            //tbSum.Text = sum.ToString(); 
+        }
+
+        void checkOut(int idBill, int idtable)
+        {
+            BillDAO.Instance.checkOut(idBill, idtable);
         }
 
         #endregion
@@ -127,63 +159,133 @@ namespace QL_Quan_CF
 
         private void cbCategoryFood_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
 
-            ComboBox comboBox = sender as ComboBox;              
+
+            ComboBox comboBox = sender as ComboBox;
             FoodCategory foodCategory = comboBox.SelectedItem as FoodCategory;
 
             Console.WriteLine(foodCategory.Name);
 
-            List<Food> food = FoodDAO.Instance.GetFood(foodCategory.ID);
+            loadComboBoxFood(foodCategory.ID);
+            //cbNameFood.Tag = food;
+        }
+
+        void loadComboBoxFood(int idCategory)
+        {
+            List<Food> food = FoodDAO.Instance.GetFood(idCategory);
 
             cbNameFood.DataSource = food;
             cbNameFood.DisplayMember = "Name";
-            //cbNameFood.Tag = food;
         }
 
         private void cbNameFood_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
-            Food food = comboBox.SelectedItem as Food;
+            if (comboBox != null) {
+                Food food = comboBox.SelectedItem as Food;
+                Console.WriteLine(food.IDCategory);
 
-            Console.WriteLine(food.IDCategory);
-
-            FoodSelected =  new Food(food.ID, food.Name, food.Price, food.IDCategory);
+                FoodSelected = new Food(food.ID, food.Name, food.Price, food.IDCategory);
+                
+            }
 
 
             //int index = cbNameFood.SelectedIndex;
             //Console.WriteLine("Selected: "+index);
             //Console.WriteLine("Item Selected: " + cbNameFood.Items[index]);
         }
-         
+
 
         private void btnAddFood_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("id ban: " + idTam);
+            Console.WriteLine("id Table: " + idTable);
+            Console.WriteLine("id Bill: " + idBill);
+            Console.WriteLine("id Food: " + FoodSelected.Name + " " + FoodSelected.ID);
+            Console.WriteLine("Count: " + numberAmount.Value);
+            if (idBill > 0)
+            {
+                BillDAO.Instance.addFoodToBill(idBill, idTable, FoodSelected.ID, (int)numberAmount.Value);
+            }
+            else
+            {
+                BillDAO.Instance.addNewBill(idBill, idTable, FoodSelected.ID, (int)numberAmount.Value);
+            }
 
-            //Food foodAdd = cbNameFood.SelectedItem  as Food;
-
-            //int tam = (cbNameFood.SelectedItem as Food).ID;
-
-            //Console.WriteLine("Food Add: ", (cbNameFood.SelectedItem));
-
+            loadTable();
+            ShowBill(idTable);
         }
-
-
-
 
         #endregion
 
         private void cbNameFood_SelectedValueChanged(object sender, EventArgs e)
         {
-            //int id = ()
-            //Console.WriteLine("Selected: " + cbNameFood.Text);
-
-            //Console.WriteLine("ok "+ (sender as ComboBox));
-
-            //Console.WriteLine(((sender as ComboBox).Tag as Food).ToString());
         }
 
-        
+        private void lvBill_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (e.IsSelected)
+            {
+                // Reresh numberAmount;
+                numberAmount.Value = billDefaults[e.ItemIndex].Count;
+
+
+                // refresh ComboBox category , ComboBox Food
+                cbCategoryFood.Text = billDefaults[e.ItemIndex].NameCategory;
+                loadComboBoxFood(billDefaults[e.ItemIndex].IdCategory);
+                cbNameFood.Text = billDefaults[e.ItemIndex].NameFood;
+
+                //ListViewItem listViewItem = sender as ListViewItem;
+
+                //Console.WriteLine("OKKOOKOK");
+                //Console.WriteLine(e.Item);
+                //Console.WriteLine(e.ItemIndex);
+                //Console.WriteLine(billDefaults[e.ItemIndex].NameFood);
+
+
+                //DisplayBill displaybill = listViewItem.Selected.La as DisplayBill;
+            }
+        }
+
+        private void bthSale_Click(object sender, EventArgs e)
+        {
+            long sumPayment = 0;
+
+            //Console.WriteLine( );
+
+            //Console.WriteLine((tbSum as TextBox).Tag);
+
+            //int tam = (int)(tbSum as TextBox).Tag;
+                
+            //int tam = int.Parse(tbSum.Tag);
+
+            sumPayment = sumBill * (100 - (int)nudSale.Value) ;
+
+            tbSum.Text =  string.Format(
+                System.Globalization.CultureInfo.GetCultureInfo("vi-VI"),
+                "{0:#,##0.00}",
+                double.Parse(sumPayment.ToString()));
+        }
+
+        private void btnPay_Click(object sender, EventArgs e)
+        {
+            if (idBill > 0)
+            {
+                if (MessageBox.Show("Bạn có muốn thanh toán không? ", "Cảnh báo", 
+                    MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+                {
+                    Console.WriteLine("THanh toans");
+                    checkOut(idBill, idTable);
+                }
+
+                loadTable();
+                ShowBill(idTable);
+            }
+            else
+            {
+                MessageBox.Show("Không tìm thấy hóa đơn để thanh toán ");
+            }
+
+        }
     }
 }
+

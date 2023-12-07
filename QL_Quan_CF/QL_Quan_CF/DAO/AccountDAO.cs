@@ -11,7 +11,8 @@ namespace QL_Quan_CF.DAO
     {
         private static AccountDAO instance;
 
-        public static AccountDAO Instance {
+        public static AccountDAO Instance
+        {
             get
             {
                 if (instance == null) return new AccountDAO();
@@ -24,9 +25,9 @@ namespace QL_Quan_CF.DAO
 
         public bool Login(string Username, string Password)
         {
-            string query = "call login ( @username , @password )";
-            
-            DataTable result = DataProvider.Instance.ExcuteQuery(query, new object[] {Username, Password});
+            string query = "select * from account where account.UserName = \"" + Username + "\"  and account.Password = \"" + Password + "\"";
+
+            DataTable result = DataProvider.Instance.ExcuteQuery(query);
             return result.Rows.Count > 0;
         }
 
