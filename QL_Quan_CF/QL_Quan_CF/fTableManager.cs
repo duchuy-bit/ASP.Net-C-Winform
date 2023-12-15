@@ -15,9 +15,7 @@ using System.Windows.Forms;
 
 namespace QL_Quan_CF
 {
-
-
-    public partial class fTableManager : Form
+    internal partial class fTableManager : Form
     {
 
         Food FoodSelected;
@@ -27,18 +25,34 @@ namespace QL_Quan_CF
         int idTable;
         int idBill = -1;
         long sumBill = 0;
-        public fTableManager()
-        {
-            InitializeComponent();
 
+        // --------------- Constructer ---------------
+        private Account accountLogin;
+
+        internal Account AccountLogin { get => accountLogin; set => accountLogin = value; }
+
+        public fTableManager(Account AccountLogin)
+        {
+            this.accountLogin = AccountLogin;
+
+            InitializeComponent();
 
             loadTable();
 
-            loadComboBoxCateoryAndFood();
+            ChangeAccount(this.accountLogin.DisplayName, this.accountLogin.Type);
 
+            loadComboBoxCateoryAndFood();
         }
+        // --------------- END Constructer ---------------
 
         #region Method
+        void ChangeAccount(string name, int type)
+        {
+            adminToolStripMenuItem.Enabled = type == 1;
+            thongtinToolStripMenuItem.Text = thongtinToolStripMenuItem.Text + " " + name;
+        }
+
+
         void loadComboBoxCateoryAndFood()
         {
             cbCategoryFood.Items.Clear();
@@ -104,7 +118,8 @@ namespace QL_Quan_CF
             if (bills.Count != 0 && bills[0]?.ID != null) idBill = bills[0].ID;
             else idBill = -1;
 
-            if (bills.Count <= 0) {
+            if (bills.Count <= 0)
+            {
                 tbSum.Text = "0";
                 sumBill = 0;
                 return;
@@ -150,17 +165,13 @@ namespace QL_Quan_CF
             fAccountProfile fAccountProfile = new fAccountProfile();
             fAccountProfile.ShowDialog();
         }
-
         private void adminToolStripMenuItem_Click(object sender, EventArgs e)
         {
             fAdmin fAdmin = new fAdmin();
             fAdmin.ShowDialog();
         }
-
         private void cbCategoryFood_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-
             ComboBox comboBox = sender as ComboBox;
             FoodCategory foodCategory = comboBox.SelectedItem as FoodCategory;
 
@@ -181,12 +192,13 @@ namespace QL_Quan_CF
         private void cbNameFood_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox comboBox = sender as ComboBox;
-            if (comboBox != null) {
+            if (comboBox != null)
+            {
                 Food food = comboBox.SelectedItem as Food;
                 Console.WriteLine(food.IDCategory);
 
                 FoodSelected = new Food(food.ID, food.Name, food.Price, food.IDCategory);
-                
+
             }
 
 
@@ -255,12 +267,12 @@ namespace QL_Quan_CF
             //Console.WriteLine((tbSum as TextBox).Tag);
 
             //int tam = (int)(tbSum as TextBox).Tag;
-                
+
             //int tam = int.Parse(tbSum.Tag);
 
-            sumPayment = sumBill * (100 - (int)nudSale.Value) ;
+            sumPayment = sumBill * (100 - (int)nudSale.Value);
 
-            tbSum.Text =  string.Format(
+            tbSum.Text = string.Format(
                 System.Globalization.CultureInfo.GetCultureInfo("vi-VI"),
                 "{0:#,##0.00}",
                 double.Parse(sumPayment.ToString()));
@@ -270,7 +282,7 @@ namespace QL_Quan_CF
         {
             if (idBill > 0)
             {
-                if (MessageBox.Show("Bạn có muốn thanh toán không? ", "Cảnh báo", 
+                if (MessageBox.Show("Bạn có muốn thanh toán không? ", "Cảnh báo",
                     MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                 {
                     Console.WriteLine("THanh toans");
@@ -284,7 +296,6 @@ namespace QL_Quan_CF
             {
                 MessageBox.Show("Không tìm thấy hóa đơn để thanh toán ");
             }
-
         }
     }
 }

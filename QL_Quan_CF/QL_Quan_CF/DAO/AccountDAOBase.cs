@@ -1,28 +1,11 @@
 ﻿using QL_Quan_CF.DTO;
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QL_Quan_CF.DAO
 {
-    internal class AccountDAO
+    internal class AccountDAOBase
     {
-        private static AccountDAO instance;
-
-        internal static AccountDAO Instance
-        {
-            get
-            {
-                if (instance == null) return new AccountDAO();
-                else return instance;
-            }
-            private set => instance = value;
-        }
-
-        public AccountDAO() { }
 
         public List<Account> Login(string Username, string Password)
         {
@@ -39,6 +22,5 @@ namespace QL_Quan_CF.DAO
 
             return accounts;
         }
-
     }
 }

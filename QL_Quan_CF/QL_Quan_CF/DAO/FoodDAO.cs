@@ -14,7 +14,7 @@ namespace QL_Quan_CF.DAO
 
         internal static FoodDAO Instance { 
             get {
-                if (instance == null) return new FoodDAO();
+                if (instance == null) return new FoodDAO(); 
                 else return instance;
             } 
             set => instance = value; 

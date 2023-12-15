@@ -116,6 +116,12 @@ DELETE FROM billinfo;
 DELETE FROM bill foodcategory;
 
 
+Select * from billinfo where billinfo.idBill in 
+(
+select bill.id from bill where bill.idtable =5
+)
+
+
 select count(*) as count from  billinfo where billinfo.idBill = 1 and billinfo.idFood = 2;
 -- -------------------------------------------------------------------------
 call test(5, 4, 1, 2);

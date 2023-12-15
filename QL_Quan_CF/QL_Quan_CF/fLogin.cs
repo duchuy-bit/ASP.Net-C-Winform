@@ -1,4 +1,5 @@
 ﻿using QL_Quan_CF.DAO;
+using QL_Quan_CF.DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,10 +33,12 @@ namespace QL_Quan_CF
             string username = txbUserName.Text;
             string password = txbPassword.Text;
 
-            if (Login(username, password))
+            if (Login(username, password).Count > 0)
             {
+                Account accountLogin = Login(username, password)[0];
+
                 this.Hide();
-                fTableManager fTableManager = new fTableManager();
+                fTableManager fTableManager = new fTableManager(accountLogin);
                 fTableManager.ShowDialog();
                 this.Close();
             }
@@ -45,11 +48,12 @@ namespace QL_Quan_CF
             }
         }
 
-        private bool Login(string username, string password)
+        private List<Account> Login(string username, string password)
         {
-            bool result = AccountDAO.Instance.Login(username, password);
+            List<Account> accounts = AccountDAO.Instance.Login(username, password);
 
-            return result;
+
+            return accounts;
         }
 
         private void btnExit_Click(object sender, EventArgs e)

@@ -55,12 +55,12 @@ namespace QL_Quan_CF.DAO
 
         public void checkOut(int idBill, int idTable)
         {
-            string queryUpdateBill = "update bill set status = 1 where bill.id = " + idBill;
+            string queryUpdateBill = "update bill set status = 1, DateCheckOut = now() where bill.id = " + idBill;
             DataProvider.Instance.ExcuteNonQuery(queryUpdateBill);
 
             string queryUpdateTable = "update tablefood set status = \"Trống\" where tablefood.id = " + idTable;
             DataProvider.Instance.ExcuteNonQuery(queryUpdateTable);
-        }
+        }      
         public void addFoodToBill(int idBill, int idTable, int idFood, int count)
         {
             Console.WriteLine("addFoodToBill");
@@ -101,8 +101,7 @@ namespace QL_Quan_CF.DAO
                     {
                         Console.WriteLine(" queryDeleteBill ");
                         string queryDeleteBill =
-                            @"DELETE FROM bill WHERE bill.id = " + idBill + @";
-                             ";
+                            @"DELETE FROM bill WHERE bill.id = " + idBill + @"; ";
                         DataProvider.Instance.ExcuteNonQuery(queryDeleteBill);
 
                         string queryUpdateTable =
